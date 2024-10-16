@@ -19,12 +19,37 @@ app.get("/files/:fileName",(req,res)=>{
 app.get('/delete/:fileName',(req,res)=>{
     fs.unlinkSync(`./files/${req.params.fileName}`);
     res.redirect('/');
-})
+});
+
 app.post('/create',(req,res)=>{
-    fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`,req.body.detail,(err)=>{
+    let  title = `${req.body.title.split(' ').join('')}.txt`;
+    if(title==='.txt'){
+        title =Math.floor(Math.random()*100)+1+'.txt';
+    }
+    fs.writeFile(`./files/${title}`,req.body.detail,(err)=>{
         console.log(err);
     });
     res.redirect('/');
+});
+app.get('/Edits/:name',(req,res)=>{
+    res.render('Edits',{Filename:`${req.params.name}`});
+})
+app.post('/Edits',(req,res)=>{
+    console.log(req.body);
+    const changes  = req.body.EditText;
+    const FileName = req.body.file_name;
+    fs.readFile(`./files/${FileName}`, 'utf8', (err, data) => {
+        if (err) {
+          return console.error('Error reading file:', err);
+        }
+        const concatenatedData = data + " "+changes;
+            fs.writeFile(`./files/${FileName}`, concatenatedData, 'utf8', (err) => {
+                if (err) {
+                  return console.error('Error writing to file:', err);
+                }
+            });
+        });
+    res.redirect(`/`);
 })
 app.listen(3000,()=>{
     console.log("app is listen  at 3000");

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EditText</title>
+    <link rel="stylesheet" href="/CssFiles/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+   <div class="main w-full min-h-screen bg-zinc-900">
+    <h1 class="text-green-500 text-4xl text-center mb-10"> Edit Text</h1>
+   <form action="/Edits" method="post">
+    <h1 class="text-blue-500 text-4xl mb-10" >Changes For File name is <span class="underline text-white capitalize"><%=Filename%></span></h1>
+    <input type="text" hidden name="file_name" value="<%=Filename%>">
+    <textarea class="block w-full outline-none px-5 py-2 my-10  bg-zinc-800 resize-none text-white capitalize" name="EditText" placeholder="Change your Task"></textarea>
+    <input type="submit" value="Change" class="mt-2 bg-blue-600 px-5 py-2 rounded mx-5">
+   </form>
+    <a href="/" class= " p-5 text-blue-500 inline-block mb-3 mt-2 ">Go Back</a>
+   </div>
+</body>
+<script src="/jsFiles/script.js"></script>
+</html>
