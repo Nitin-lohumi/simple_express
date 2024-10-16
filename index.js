@@ -1,37 +1,31 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 app.use(express.json());
-let books  =[
-    { id: 1, title: '1984', author: 'George Orwell' },
-    { id: 2, title: 'To Kill a Mockingbird', author: 'Harper Lee' },
-    { id: 3, title: '1000', author: 'George ' },
-    { id: 4, title: 'hey Mockingbird', author: ' Lee' },
-]
-
-app.get('/books',(req,res)=>{
-    res.json(books);
+app.use(express.urlencoded({extended:true}));
+app.set('view engine','ejs');
+app.use(express.static(path.join(__dirname,'public')));
+app.get('/',(req,res)=>{
+    fs.readdir(`./files`,(err,file)=>{
+        res.render("index",{Files:file});
+    });
 })
-app.get('/books/:id', (req, res) => {
-    const bookId = parseInt(req.params.id);
-    const book = books.find(b => b.id === bookId);
-
-    if (!book) {
-        return res.status(404).json({ message: 'Book not found' });
-    }
-    res.json(book);
-});
-
-app.post('/books',(req,res)=>{
-    const {title,author} = req.body;
-    const newBook = {
-        id:books.length +1,
-        title,
-        author
-    }
-    books.push(newBook);
-    res.status(201).json(newBook);
+app.get("/files/:fileName",(req,res)=>{
+    fs.readFile(`./files/${req.params.fileName}`,"utf-8",(err,fileData)=>{
+        res.render('show',{filename:req.params.fileName,data:fileData});
+    })
 })
-
+app.get('/delete/:fileName',(req,res)=>{
+    fs.unlinkSync(`./files/${req.params.fileName}`);
+    res.redirect('/');
+})
+app.post('/create',(req,res)=>{
+    fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`,req.body.detail,(err)=>{
+        console.log(err);
+    });
+    res.redirect('/');
+})
 app.listen(3000,()=>{
     console.log("app is listen  at 3000");
 })
