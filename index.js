@@ -9,7 +9,7 @@ app.set('views', path.join(__dirname,'views'));
 app.use(express.static(path.join(__dirname,'public')));
 app.get('/',(req,res)=>{
     fs.readdir(`./files`,(err,file)=>{
-        res.render("index",{Files:file});
+        res.render("index.ejs",{Files:file});
     });
 })
 app.get("/files/:fileName",(req,res)=>{
